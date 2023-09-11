@@ -65,11 +65,4 @@ typings/
 # nuxt.js build output
 .nuxt
 
-.idea
-
 /FE/Assets/audio/*
-
-/Python/venv-test/Include
-/Python/venv-test/Lib
-/Python/venv-test/Scripts
-/Python/venv-test/pyvenv.cfg
