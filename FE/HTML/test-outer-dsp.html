@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dsp-v11-测试</title>
+    <link rel="shortcut icon" href="/Test/Assets/Icon/favicon.ico.svg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            padding: 50px 0;
+            background-color: yellowgreen;
+        }
+
+        .container .wrap {
+            margin: 0 auto;
+            padding: 50px;
+            width: 300px;
+            background-color: #fff;
+        }
+    </style>
+    <script src="/Test/JavaScript/jQuery/jquery_1.12.4.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="wrap">
+            <!-- 引入文件 -->
+<script src="http://testmini.eastday.com/assets/plugins/newdsp_outer/v11.20220725/v11.20220725.min.js"></script>
+
+<!-- 容器 -->
+<div id="dsp_box_01"></div>
+<div style="width: 100%; height: 500px;"></div>
+<div id="dsp_box_02"></div>
+<div style="width: 100%; height: 500px;"></div>
+<div id="dsp_box_03"></div>
+
+<!-- 使用 -->
+<script>
+    (window.slotbytjdsp = window.slotbytjdsp || []).push({
+        qid: '04478',
+        id: 102298,
+        element: 'dsp_box_01', // 容器 id
+        news_qid: 'qid04532', // 新闻渠道号
+        istest: true // 测试环境时有此字段，线上环境为 false 或者删除此字段
+    });
+
+    (window.slotbytjdsp = window.slotbytjdsp || []).push({
+        qid: '04478',
+        id: 102299,
+        element: 'dsp_box_02',
+        news_qid: 'qid04532',
+        istest: true
+    });
+
+    (window.slotbytjdsp = window.slotbytjdsp || []).push({
+        qid: '04478',
+        id: 102300,
+        element: 'dsp_box_03',
+        news_qid: 'qid04532',
+        istest: true
+    });
+</script>
+        
+        </div>
+    </div>
+</body>
+
+</html>

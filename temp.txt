@@ -1,0 +1,28 @@
+
+provide / inject
+
+inject
+
+
+
+C:\Windows\System32\drivers\etc
+
+
+
+chrome://flags/#block-insecure-private-network-requests
+
+
+
+Get-ChildItem -Recurse | Select-String -Pattern "player_pause_porch"
+
+
+
+
+
+
+
+
+
+
+
+

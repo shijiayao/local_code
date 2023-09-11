@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #7f7f7f;
+        }
+
+        .fixed_common {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .absolute_common {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .br {
+            border: 1px solid #000;
+            border-radius: 50%;
+        }
+
+        .box_01 {
+            width: 900px;
+            height: 900px;
+
+        }
+
+        .box_02 {
+            width: 800px;
+            height: 800px;
+        }
+
+        .box_03 {
+            width: 700px;
+            height: 700px;
+        }
+
+        .box_04 {
+            width: 600px;
+            height: 600px;
+        }
+
+        .yuan {
+            width: 600px;
+            height: 600px;
+            background-color: #7f7f7f;
+            z-index: 10;
+        }
+
+        .zi1 {
+            position: absolute;
+            top: -50px;
+            left: 25px;
+            transform-origin: 375px 450px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .zi1:nth-child(odd) {
+            color: #fff;
+        }
+
+        .zi1:nth-child(even) {
+            color: #000;
+        }
+
+        .zi2 {
+            position: absolute;
+            top: -50px;
+            left: 25px;
+            transform-origin: 325px 400px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .zi2:nth-child(odd) {
+            color: #fff;
+        }
+
+        .zi2:nth-child(even) {
+            color: #000;
+        }
+
+        .zi3 {
+            position: absolute;
+            top: -50px;
+            left: 25px;
+            transform-origin: 275px 350px;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .zi3:nth-child(odd) {
+            color: #fff;
+        }
+
+        .zi3:nth-child(even) {
+            color: #000;
+        }
+
+        .line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1px;
+            height: 900px;
+            background-color: #000;
+            z-index: 9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box_01 fixed_common br">
+
+        <ul class="box_02 absolute_common br"></ul>
+
+        <ul class="box_03 absolute_common br"></ul>
+
+        <ul class="box_04 absolute_common br"></ul>
+
+        <div class="yuan absolute_common br"></div>
+
+    </div>
+
+    <script>
+        let W = document.querySelector('.box_01');
+        let T = document.querySelector('.box_02');
+        let D = document.querySelector('.box_03');
+        let N = document.querySelector('.box_04');
+
+        const 天干 = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+        const 地支 = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+        const 天干地支 = [];
+
+        for (let index = 0; index < 60; index++) {
+            let idx1 = index % 10;
+            let idx2 = index % 12;
+
+            天干地支.push(天干[idx1] + 地支[idx2]);
+
+            if (index < 30) {
+                let dom_l = document.createElement('div');
+                dom_l.classList.add('line');
+                dom_l.style.transform = `translate(-50%, -50%) rotate(${index * 6 + 3}deg)`;
+
+                W.appendChild(dom_l);
+            }
+
+            let dom_t = document.createElement('li');
+            dom_t.classList.add('zi1');
+            dom_t.style.transform = `rotateZ(${index * 6}deg) translateX(350px)`;
+            dom_t.innerText = 天干[idx1];
+
+            T.appendChild(dom_t);
+
+            let dom_d = document.createElement('li');
+            dom_d.classList.add('zi2');
+            dom_d.style.transform = `rotateZ(${index * 6}deg) translateX(300px)`;
+            dom_d.innerText = 地支[idx2];
+
+            D.appendChild(dom_d);
+
+            let dom_n = document.createElement('li');
+            dom_n.classList.add('zi3');
+            dom_n.style.transform = `rotateZ(${index * 6}deg) translateX(250px)`;
+            dom_n.innerText = 1984 + index;
+
+            N.appendChild(dom_n);
+        }
+
+        console.log(天干地支);
+    </script>
+
+</body>
+
+</html>
