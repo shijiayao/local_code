@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iframe_write</title>
+</head>
+
+<body>
+    <section id="box"></section>
+
+    <script>
+        /**
+         * 动态创建 iframe
+         * 并向 iframe 内部写入标签
+         *
+         * 解决嵌套页和被嵌套页跨域问题
+         * 引入其他站点资源文件，并且可控
+         * 参考谷歌、百度 iframe 广告设计插件 异步插件
+         */
+
+        let boxDom = document.querySelector('#box');
+
+        let iframeNode = document.createElement('iframe');
+        iframeNode.id = 'test_iframe';
+        boxDom.appendChild(iframeNode);
+
+        let iframeDom = document.querySelector('#test_iframe');
+
+        iframeDom.contentWindow.document.write('<h1>123</h1>');
+        iframeDom.contentWindow.document.write('<script>' + 'console.log(123);' + '</' + 'script>');
+        iframeDom.contentWindow.document.write('<script src="/javascript/test.js"></' + 'script>');
+    </script>
+</body>
+
+</html>

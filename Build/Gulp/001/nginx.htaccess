@@ -1,0 +1,61 @@
+# 配置文件已弃用，新配置文件 /node_server/nginx_conf/vhosts/local.sports.eastday.com.conf
+if (!-e $request_filename) {
+    set $uri_org $uri;
+    rewrite  ^/(.*)$  /index.php?s=/$1  last;
+}
+
+location /detail.html {
+    alias D:/Work/Project/sports_pc/data/detail.html;
+}
+
+location /topic.html {
+    alias D:/Work/Project/sports_pc/data/topic.html;
+}
+
+location /jscss/v4/ {
+    alias D:/Work/Project/sports_pc/tpl/src/;
+}
+
+location ~* /tpl/src/js/lib/qrcode.min.js {
+    alias D:/Work/Project/sports_pc/tpl/src/js/lib/qrcode.min.js;
+}
+
+location ~* /tpl/src/(.+?).min.js {
+    rewrite /tpl/src/(.+?).min.js /tpl/src/$1.js;
+}
+
+location ~* /js/daload/daload_(.+?).min.js {
+    alias D:/Work/Project/sports_pc/tpl/src/js/daload/daload_$1.js;
+}
+
+location ~* /data/tyggresource/* {
+    # proxy_pass https://sports.eastday.com;
+    proxy_pass http://test.sports.eastday.com;
+}
+
+
+location ~* /dfsports_output/topnews_dfty {
+    proxy_pass http://10.10.56.73;
+}
+
+location ~* /data/daload_qid.js {
+    # proxy_pass https://sports.eastday.com;
+    proxy_pass http://test.sports.eastday.com;
+}
+
+location ~* /data/news_detail_left/default.json {
+    # proxy_pass https://sports.eastday.com;
+    proxy_pass http://test.sports.eastday.com;
+}
+
+location ~* /data/qudao/acticle.js {
+    proxy_pass https://sports.eastday.com;
+}
+
+location ~* /data/daload_other.js {
+    proxy_pass https://sports.eastday.com;
+}
+
+location ~* /data/fengxing_video/author.json {
+    proxy_pass https://sports.eastday.com;
+}
