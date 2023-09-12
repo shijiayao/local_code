@@ -133,9 +133,9 @@ const UTIL = {
 
         return dateStr;
     },
-    // 生成随机数，范围 x - y
-    randomNumber: function (x, y) {
-        return Math.floor(Math.random() * (y - x + 1) + x);
+    // 生成随机数，范围 min - max
+    randomNumber: function (min, max) {
+        return Math.floor(Math.random() * (max + 1 - min) + min);
     },
     // 生成随机 ID _当前时间戳_随机数(36进制)
     randomIDStr: function (position) {
