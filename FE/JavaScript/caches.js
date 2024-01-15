@@ -542,6 +542,10 @@
             return s.replace(/零{2,}/g, '零').replace(/零+$/, '');
         }
 
+        function handleTen (s) {
+            return s.replace(/^一十/, '十');
+        }
+
         function _transform (n) {
             if (n === '0000') {
                 return '零';
@@ -577,7 +581,7 @@
             result += c + u;
         }
 
-        return handleZero(result);
+        return handleTen(handleZero(result));
     }
 
     /**
