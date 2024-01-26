@@ -6,18 +6,19 @@ $global:fristTime = 0
 $global:lastTime = 0
 
 # 获取当前日期时间
+# Get the current date and time
 function GetDateTime {
     $currentDateTime = Get-Date
 
     return @{
-        year       = $currentDateTime.Year;
-        month      = "{0:00}" -f $currentDateTime.Month;
-        day        = "{0:00}" -f $currentDateTime.Day;
-        hour       = "{0:00}" -f $currentDateTime.Hour;
-        minute     = "{0:00}" -f $currentDateTime.Minute;
-        second     = "{0:00}" -f $currentDateTime.Second;
-        FormatDate = $currentDateTime.ToString("yyyy-MM-dd")
-        FormatTime = $currentDateTime.ToString("HH:mm:ss")
+        year       = [int]($currentDateTime.Year);
+        month      = [int]($currentDateTime.Month);
+        day        = [int]($currentDateTime.Day);
+        hour       = [int]($currentDateTime.Hour);
+        minute     = [int]($currentDateTime.Minute);
+        second     = [int]($currentDateTime.Second);
+        FormatDate = $currentDateTime.ToString("yyyy-MM-dd");
+        FormatTime = $currentDateTime.ToString("HH:mm:ss");
     }
 }
 
@@ -161,7 +162,8 @@ while ($global:whileFlag) {
     queryApp
 
     if ($global:openTime -eq -1) {
-        intervalFuzzy
+        # intervalFuzzy
+        $global:whileTime = 3
     }
     else {
         intervalAccurate
