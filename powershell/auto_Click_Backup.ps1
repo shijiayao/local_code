@@ -112,9 +112,6 @@ function queryApp {
 
                 $global:openTime = $CurrentDateTime.minute
 
-                $CurrentDateTime.minute.GetType()
-                $global:openTime.GetType()
-
                 if ($global:openTime -lt 30) {
                     $global:fristTime = $global:openTime
                     $global:lastTime = $global:openTime + 30
