@@ -146,10 +146,13 @@ function clickPoint {
 
 
     for ($i = 1; $i -le (Get-Random -Minimum 1 -Maximum 4); $i++) {
-        # Move the mouse to
         [UserWin32]::SetForegroundWindow($MainWindowHandle)
-        [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point((Get-Random -Minimum ($WindowRect.Left + 130) -Maximum ($WindowRect.Left + 280)), (Get-Random -Minimum ($WindowRect.Left + 170) -Maximum ($WindowRect.Left + 240)))
-        Start-Sleep -Seconds 0.3
+        Start-Sleep -Seconds 0.2
+        # Move the mouse to
+        $X = (Get-Random -Minimum ($WindowRect.Left + 130) -Maximum ($WindowRect.Left + 280))
+        $Y = (Get-Random -Minimum ($WindowRect.Top + 170) -Maximum ($WindowRect.Top + 220)) + 200
+        [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($X, $Y)
+        Start-Sleep -Seconds 0.2
 
         # will perform left click down
         $SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0);
