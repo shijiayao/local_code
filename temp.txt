@@ -15,7 +15,7 @@ chrome://flags/#block-insecure-private-network-requests
 
 Get-ChildItem -Recurse | Select-String -Pattern "player_pause_porch"
 
-
+Get-ChildItem | Select-Object Name | Out-File -FilePath filenames.txt
 
 
 
