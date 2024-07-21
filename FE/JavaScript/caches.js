@@ -49,7 +49,7 @@
 
     let arr2 = fn(arr1);
 
-    function fn (arr) {
+    function fn(arr) {
         let resultArr = [];
 
         arr.forEach((e) => {
@@ -166,7 +166,7 @@
 
     let _undefined = void 0;
 
-    function TestUndefined () {
+    function TestUndefined() {
         let undefined = 0; // eslint-disable-line no-shadow-restricted-names
         console.log(undefined);
     }
@@ -198,15 +198,15 @@
      */
     const a = {
         num: 0,
-        [Symbol.toPrimitive] () {
+        [Symbol.toPrimitive]() {
             console.log('[Symbol.toPrimitive]');
             return ++this.num;
         },
-        valueOf () {
+        valueOf() {
             console.log('valueOf');
             return ++this.num;
         },
-        toString () {
+        toString() {
             console.log('toString');
             return ++this.num;
         }
@@ -245,8 +245,8 @@
     };
 
     // 生成器
-    Object.prototype[Symbol.iterator] = function * () {
-        return yield * Object.values(this)[Symbol.iterator]();
+    Object.prototype[Symbol.iterator] = function* () {
+        return yield* Object.values(this)[Symbol.iterator]();
     };
 
     let [a, b] = {
@@ -269,13 +269,13 @@
      * 每个任务具有原子性，即不可中断，只能在两个任务之间中断
      * @param  {...Function} tasks 任务列表，每个任务无参数、异步
      */
-    function processTasks (...tasks) {
+    function processTasks(...tasks) {
         let isRunning = false;
         const result = [];
         let index = 0; // 当前执行的任务索引
 
         return {
-            start () {
+            start() {
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise(async (resolve, reject) => {
                     if (isRunning) {
@@ -296,7 +296,7 @@
                     resolve(result);
                 });
             },
-            pause () {
+            pause() {
                 isRunning = false;
             }
         };
@@ -334,7 +334,7 @@
 
 {
     // 并发任务控制
-    function timeout (time) {
+    function timeout(time) {
         return new Promise((resolve, reject) => {
             setInterval(() => {
                 resolve();
@@ -343,13 +343,13 @@
     }
 
     class SuperTask {
-        constructor (options = { parallelCount: 2 }) {
+        constructor(options = { parallelCount: 2 }) {
             this.parallelCount = options.parallelCount; // 并发数量
             this.tasks = [];
             this.runningCount = 0; // 正在执行的任务数量
         }
 
-        add (task) {
+        add(task) {
             return new Promise((resolve, reject) => {
                 this.tasks.push({ task, resolve, reject });
                 this._run();
@@ -357,7 +357,7 @@
         }
 
         // 执行任务
-        _run () {
+        _run() {
             while (this.runningCount < this.parallelCount && this.tasks.length > 0) {
                 const { task, resolve, reject } = this.tasks.shift();
                 ++this.runningCount;
@@ -372,7 +372,7 @@
     }
 
     const superTask = new SuperTask();
-    function addTask (time, name) {
+    function addTask(time, name) {
         superTask
             .add(() => timeout(time))
             .then(() => {
@@ -409,11 +409,11 @@
 
     console.log(newArr);
 
-    function isObject (value) {
+    function isObject(value) {
         return typeof value === 'object' && value !== null;
     }
 
-    function equals (value1, value2) {
+    function equals(value1, value2) {
         if (!isObject(value1) || !isObject(value2)) {
             return Object.is(value1, value2);
         }
@@ -451,7 +451,7 @@
      * string1 === string2 return 0
      */
 
-    function compare (string1, string2) {
+    function compare(string1, string2) {
         const iter1 = walk(string1);
         const iter2 = walk(string2);
 
@@ -473,7 +473,7 @@
         }
     }
 
-    function * walk (string) {
+    function* walk(string) {
         let part = '';
 
         for (let index = 0; index < string.length; index++) {
@@ -527,7 +527,7 @@
      * @param {number} number 万亿以下数字
      * @returns string
      */
-    function toChineseNumber (number) {
+    function toChineseNumber(number) {
         const numberStringArray = number
             .toString()
             .replace(/(?=(\d{4})+$)/g, ',')
@@ -538,15 +538,15 @@
         const units = ['', '十', '百', '千'];
         const bigUnits = ['', '万', '亿'];
 
-        function handleZero (s) {
+        function handleZero(s) {
             return s.replace(/零{2,}/g, '零').replace(/零+$/, '');
         }
 
-        function handleTen (s) {
+        function handleTen(s) {
             return s.replace(/^一十/, '十');
         }
 
-        function _transform (n) {
+        function _transform(n) {
             if (n === '0000') {
                 return '零';
             }
@@ -589,7 +589,7 @@
      * @param {number} number 万亿以下数字
      * @returns string
      */
-    function toBigChineseNumber (number) {
+    function toBigChineseNumber(number) {
         const result = toChineseNumber(number);
         const map = {
             零: '零',
