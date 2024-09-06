@@ -1,50 +1,28 @@
 {
     let arr3 = [
+        { value : 1, label : '工具', chidren : [{ value : 2, label : '备忘录', chidren : [] }] },
         {
-            value: 1,
-            label: '工具',
-            chidren: [
+            value   : 3,
+            label   : '教育',
+            chidren : [
                 {
-                    value: 2,
-                    label: '备忘录',
-                    chidren: []
-                }
-            ]
-        },
-        {
-            value: 3,
-            label: '教育',
-            chidren: [
-                {
-                    value: 4,
-                    label: '学历教育',
-                    chidren: [
-                        {
-                            value: 6,
-                            label: '中等',
-                            chidren: []
-                        },
-                        {
-                            value: 5,
-                            label: '高等',
-                            chidren: []
-                        }
+                    value   : 4,
+                    label   : '学历教育',
+                    chidren : [
+                        { value : 6, label : '中等', chidren : [] },
+                        { value : 5, label : '高等', chidren : [] }
                     ]
                 },
-                {
-                    value: 7,
-                    label: '成人教育',
-                    chidren: []
-                }
+                { value : 7, label : '成人教育', chidren : [] }
             ]
         }
     ];
 
     let arr1 = [
-        { '1_class': '工具', '2_class': '备忘录', '1_id': 1, '2_id': 2 },
-        { '1_class': '教育', '2_class': '学历教育', '3_class': '中等', '1_id': 3, '2_id': 4, '3_id': 6 },
-        { '1_class': '教育', '2_class': '学历教育', '3_class': '高等', '1_id': 3, '2_id': 4, '3_id': 5 },
-        { '1_class': '教育', '2_class': '成人教育', '1_id': 3, '2_id': 7 }
+        { '1_class' : '工具', '2_class' : '备忘录', '1_id' : 1, '2_id' : 2 },
+        { '1_class' : '教育', '2_class' : '学历教育', '3_class' : '中等', '1_id' : 3, '2_id' : 4, '3_id' : 6 },
+        { '1_class' : '教育', '2_class' : '学历教育', '3_class' : '高等', '1_id' : 3, '2_id' : 4, '3_id' : 5 },
+        { '1_class' : '教育', '2_class' : '成人教育', '1_id' : 3, '2_id' : 7 }
     ];
 
     let arr2 = fn(arr1);
@@ -68,9 +46,9 @@
 
                 if (!flag) {
                     tempArr.push({
-                        value: e[`${num}_id`],
-                        label: e[`${num}_class`],
-                        chidren: []
+                        value   : e[`${num}_id`],
+                        label   : e[`${num}_class`],
+                        chidren : []
                     });
 
                     tempArr = tempArr[tempArr.length - 1].chidren;
@@ -88,17 +66,17 @@
 
 {
     // 连续赋值
-    let a = { n: 1 };
+    let a = { n : 1 };
     let b = a;
 
-    a.x = a = { n: 2 };
+    a.x = a = { n : 2 };
 
     console.log(a.x);
     console.log(b.x);
 }
 
 {
-    let foo = { bar: 1 };
+    let foo = { bar : 1 };
     let arr1 = [1, 2, foo];
     let arr2 = arr1.slice(1);
 
@@ -114,7 +92,7 @@
 
 {
     const obj = {
-        a: 0
+        a : 0
     };
     obj['1'] = 0;
     obj[++obj.a] = obj.a++;
@@ -167,7 +145,7 @@
     let _undefined = void 0;
 
     function TestUndefined() {
-        let undefined = 0; // eslint-disable-line no-shadow-restricted-names
+        let undefined = 0;
         console.log(undefined);
     }
 }
@@ -197,7 +175,7 @@
      *    若得不到原始值，抛出异常。
      */
     const a = {
-        num: 0,
+        num : 0,
         [Symbol.toPrimitive]() {
             console.log('[Symbol.toPrimitive]');
             return ++this.num;
@@ -250,8 +228,8 @@
     };
 
     let [a, b] = {
-        a: 1,
-        b: 2
+        a : 1,
+        b : 2
         // [Symbol.iterator] () {
         //     let arr = Object.values(this);
         //     const iter = arr[Symbol.iterator]();
@@ -276,7 +254,6 @@
 
         return {
             start() {
-                // eslint-disable-next-line no-async-promise-executor
                 return new Promise(async (resolve, reject) => {
                     if (isRunning) {
                         return;
@@ -343,7 +320,7 @@
     }
 
     class SuperTask {
-        constructor(options = { parallelCount: 2 }) {
+        constructor(options = { parallelCount : 2 }) {
             this.parallelCount = options.parallelCount; // 并发数量
             this.tasks = [];
             this.runningCount = 0; // 正在执行的任务数量
@@ -390,10 +367,10 @@
 {
     // 对象数组去重
     const arr = [
-        { a: 1, b: 2 },
-        { b: 2, a: 1 },
-        { a: 1, b: 2, c: { a: 1, b: 2 } },
-        { b: 2, a: 1, c: { b: 2, a: 1 } }
+        { a : 1, b : 2 },
+        { b : 2, a : 1 },
+        { a : 1, b : 2, c : { a : 1, b : 2 } },
+        { b : 2, a : 1, c : { b : 2, a : 1 } }
     ];
 
     const newArr = [...arr];
@@ -592,21 +569,21 @@
     function toBigChineseNumber(number) {
         const result = toChineseNumber(number);
         const map = {
-            零: '零',
-            一: '壹',
-            二: '贰',
-            三: '叁',
-            四: '肆',
-            五: '伍',
-            六: '陆',
-            七: '柒',
-            八: '捌',
-            九: '玖',
-            十: '拾',
-            百: '佰',
-            千: '仟',
-            万: '万',
-            亿: '亿'
+            零 : '零',
+            一 : '壹',
+            二 : '贰',
+            三 : '叁',
+            四 : '肆',
+            五 : '伍',
+            六 : '陆',
+            七 : '柒',
+            八 : '捌',
+            九 : '玖',
+            十 : '拾',
+            百 : '佰',
+            千 : '仟',
+            万 : '万',
+            亿 : '亿'
         };
 
         return result

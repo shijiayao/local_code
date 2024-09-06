@@ -1,8 +1,8 @@
 /* eslint-disable import/no-absolute-path, import/no-absolute-path */
 import * as THREE from 'three';
-import { MMDLoader } from '/FE/install-public/three/examples/jsm/loaders/MMDLoader.js';
-import { MMDAnimationHelper } from '/FE/install-public/three/examples/jsm/animation/MMDAnimationHelper.js';
-import { LightProbeGenerator } from '/FE/install-public/three/examples/jsm/lights/LightProbeGenerator.js';
+import { MMDLoader } from '/FE/npm-install-public/three/examples/jsm/loaders/MMDLoader.js';
+import { MMDAnimationHelper } from '/FE/npm-install-public/three/examples/jsm/animation/MMDAnimationHelper.js';
+import { LightProbeGenerator } from '/FE/npm-install-public/three/examples/jsm/lights/LightProbeGenerator.js';
 /* eslint-enable import/no-absolute-path, import/no-absolute-path */
 
 const three_box = document.getElementById('three_box');
