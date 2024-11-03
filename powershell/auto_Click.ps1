@@ -127,13 +127,36 @@ function queryApp {
 
             }
 
-            Start-Sleep -Seconds (Get-Random -Minimum 0.0 -Maximum 2.0)
-
-            clickPoint $window.MainWindowHandle
+            waitWindow
         }
     }
 }
 
+function waitWindow {
+    $windows = Get-Process | Where-Object { $_.MainWindowTitle -ne "" }
+
+    for ($i = 1; $i -le 5; $i++) {
+        $windows = Get-Process | Where-Object { $_.MainWindowTitle -ne "" }
+
+        foreach ($window in $windows) {
+            if ($window.MainWindowTitle -match "ÊÓÆµÑ²²é¸¨Öú³ÌÐò") {
+                [UserWin32]::SetForegroundWindow($window.MainWindowHandle)
+            }
+        }
+
+        log "$($i):wait 2 Seconds"
+
+        Start-Sleep -Seconds 2
+    }
+
+    $windows = Get-Process | Where-Object { $_.MainWindowTitle -ne "" }
+
+    foreach ($window in $windows) {
+        if ($window.MainWindowTitle -match "ÊÓÆµÑ²²é¸¨Öú³ÌÐò") {
+            clickPoint $window.MainWindowHandle
+        }
+    }
+}
 
 function clickPoint {
     param($MainWindowHandle)
