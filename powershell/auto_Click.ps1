@@ -70,7 +70,10 @@ function log {
 
     $CurrentDateTime = GetDateTime
 
-    $filePath = "./log/" + $CurrentDateTime.FormatDate + ".txt"
+    $directoryPath = "./log" + $CurrentDateTime.year
+    New-Item -ItemType Directory -Path $directoryPath -Force | Out-Null
+
+    $filePath = $directoryPath + "/" + $CurrentDateTime.FormatDate + ".txt"
     $text = $CurrentDateTime.FormatDate + " " + $CurrentDateTime.FormatTime + " " + $content
 
     Add-Content -Value $text -Encoding UTF8 -Path $filePath
@@ -168,8 +171,10 @@ function clickPoint {
     # Write-Host "`t`twindow Left: $($WindowRect.Left), Top: $($WindowRect.Top), Right: $($WindowRect.Right), Bottom: $($WindowRect.Bottom)"
 
 
-    for ($i = 1; $i -le (Get-Random -Minimum 1 -Maximum 4); $i++) {
+    for ($i = 1; $i -le (Get-Random -Minimum 1.0 -Maximum 2.1); $i++) {
         [UserWin32]::SetForegroundWindow($MainWindowHandle)
+        $WindowRect = New-Object RECT
+        [UserWin32]::GetWindowRect($MainWindowHandle, [ref]$WindowRect)
         Start-Sleep -Seconds 0.2
         # Move the mouse to
         $X = (Get-Random -Minimum ($WindowRect.Left + 130) -Maximum ($WindowRect.Left + 280))
@@ -236,10 +241,10 @@ while ($global:whileFlag) {
 
     if ($global:openTime -eq -1) {
         # intervalFuzzy
-        $global:whileTime = 3
+        # $global:whileTime = 3
     }
     else {
-        intervalAccurate
+        # intervalAccurate
     }
 
     if ($CurrentDateTime.hour -ge 20) {
