@@ -1,47 +1,73 @@
-# Setting up an environment by importing a couple of system assemblies — simply copy these two
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+# 主程序模块
+Add-Type -AssemblyName System.Drawing
+Add-Type -AssemblyName System.Windows.Forms
 
-Add-Type @'
-    using System;
-    using System.Runtime.InteropServices;
+# 防重复启动模块
+$mutex = New-Object System.Threading.Mutex($true, "Global\SyncService", [ref]$null)
+if (-not $mutex.WaitOne(0, $false)) {
+    Add-Type -AssemblyName System.Windows.Forms
+    [System.Windows.Forms.MessageBox]::Show("程序已在运行中", "提示", "OK", "Information") | Out-Null
+    exit
+}
 
-    public class UserWin32 {
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+Add-Type -TypeDefinition @"
+using System;
+using System.Runtime.InteropServices;
 
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+public class UserWin32 {
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-    }
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
 
-    public struct RECT
-    {
-        public int Left;
-        public int Top;
-        public int Right;
-        public int Bottom;
-    }
-'@
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+}
 
-$signature = @'
-    [DllImport("user32.dll",CharSet=CharSet.Auto,CallingConvention=CallingConvention.StdCall)]
-    public static extern void mouse_event(long dwFlags, long dx, long dy, long cButtons, long dwExtraInfo);
-'@
+public struct RECT {
+    public int Left;
+    public int Top;
+    public int Right;
+    public int Bottom;
+}
+
+public class IconAPI {
+    [DllImport("shell32.dll")]
+    public static extern int ExtractIconEx(
+        string IpszFile,
+        int nIconIndex,
+        IntPtr[] phiconLarge,
+        IntPtr[] phiconSmall,
+        int nIcons
+    );
+}
+"@
+
+$signature = @"
+    [DllImport("user32.dll", CharSet=CharSet.Auto, CallingConvention=CallingConvention.StdCall)]
+    public static extern void mouse_event(
+        long dwFlags,
+        long dx,
+        long dy,
+        long cButtons,
+        long dwExtraInfo
+    );
+"@
 $SendMouseClick = Add-Type -memberDefinition $signature -name "Win32MouseEventNew" -namespace Win32Functions -passThru
 
 Start-Sleep -Seconds 5
 
 # Global Variable
+$global:ScriptPath = "E:/Development/powershell/"
+$global:startFlag = $true
 $global:whileFlag = 1
 $global:whileTime = 3
 
@@ -70,7 +96,7 @@ function log {
 
     $CurrentDateTime = GetDateTime
 
-    $directoryPath = "./log" + $CurrentDateTime.year
+    $directoryPath = $global:ScriptPath + "/log/" + $CurrentDateTime.year
     New-Item -ItemType Directory -Path $directoryPath -Force | Out-Null
 
     $filePath = $directoryPath + "/" + $CurrentDateTime.FormatDate + ".txt"
@@ -86,7 +112,10 @@ function info {
 
     $CurrentDateTime = GetDateTime
 
-    $filePath = "./log/" + $CurrentDateTime.FormatDate + "-info.txt"
+    $directoryPath = $global:ScriptPath + "/log/" + $CurrentDateTime.year
+    New-Item -ItemType Directory -Path $directoryPath -Force | Out-Null
+
+    $filePath = $directoryPath + "/" + $CurrentDateTime.FormatDate + "-info.txt"
     $text = $CurrentDateTime.FormatDate + " " + $CurrentDateTime.FormatTime + " " + $content
 
     Add-Content -Value $text -Encoding UTF8 -Path $filePath
@@ -99,18 +128,10 @@ function queryApp {
     $windows = Get-Process | Where-Object { $_.MainWindowTitle -ne "" }
 
     foreach ($window in $windows) {
-        <#
-        Write-Host "process name: $($window.Name)"
-        Write-Host "ID: $($window.Id)"
-        Write-Host "Handle: $($window.Handle)"
-        Write-Host "Main Window Title: $($window.MainWindowTitle)"
-        Write-Host "Main Window Handle: $($window.MainWindowHandle)"
-        Write-Host "------------------------"
-        #>
-
+        # Write-Host "Window Title: $($window.MainWindowTitle)"
         if ($window.MainWindowTitle -match "视频巡查辅助程序") {
-            if ($global:openTime -eq -1) {
 
+            if ($global:openTime -eq -1) {
                 $CurrentDateTime = GetDateTime
 
                 $global:openTime = $CurrentDateTime.minute
@@ -118,15 +139,14 @@ function queryApp {
                 if ($global:openTime -lt 30) {
                     $global:fristTime = $global:openTime
                     $global:lastTime = $global:openTime + 30
-                }
-                else {
+                } else {
                     $global:fristTime = $global:openTime - 30
                     $global:lastTime = $global:openTime
                 }
 
-                info ("openTime: " + $global:openTime)
-                info ("fristTime: " + $global:fristTime)
-                info ("lastTime: " + $global:lastTime)
+                log ("openTime: " + $global:openTime)
+                log ("fristTime: " + $global:fristTime)
+                log ("lastTime: " + $global:lastTime)
 
             }
 
@@ -170,15 +190,17 @@ function clickPoint {
 
     # Write-Host "`t`twindow Left: $($WindowRect.Left), Top: $($WindowRect.Top), Right: $($WindowRect.Right), Bottom: $($WindowRect.Bottom)"
 
-
     for ($i = 1; $i -le (Get-Random -Minimum 1.0 -Maximum 2.1); $i++) {
         [UserWin32]::SetForegroundWindow($MainWindowHandle)
         $WindowRect = New-Object RECT
         [UserWin32]::GetWindowRect($MainWindowHandle, [ref]$WindowRect)
+
         Start-Sleep -Seconds 0.2
+
         # Move the mouse to
         $X = (Get-Random -Minimum ($WindowRect.Left + 130) -Maximum ($WindowRect.Left + 280))
         $Y = (Get-Random -Minimum ($WindowRect.Top + 170) -Maximum ($WindowRect.Top + 220)) + 200
+
         [System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point($X, $Y)
         Start-Sleep -Seconds 0.2
 
@@ -186,50 +208,11 @@ function clickPoint {
         $SendMouseClick::mouse_event(0x00000002, 0, 0, 0, 0);
         # will perform left click up
         $SendMouseClick::mouse_event(0x00000004, 0, 0, 0, 0);
+
+        log "Click-$($i) Left: $($WindowRect.Left), Top: $($WindowRect.Top), Right: $($WindowRect.Right), Bottom: $($WindowRect.Bottom)"
     }
 
     log "Click on check-in"
-}
-
-function intervalFuzzy {
-    $CurrentDateTime = GetDateTime
-
-    if ($CurrentDateTime.minute -lt 10) {
-        $global:whileTime = (10 - $CurrentDateTime.minute) * 60 - $CurrentDateTime.second
-    }
-    elseif ($CurrentDateTime.minute -ge 20 -and $CurrentDateTime.minute -lt 40) {
-        $global:whileTime = (60 - $CurrentDateTime.minute) * 60 - $CurrentDateTime.second
-    }
-    elseif ($CurrentDateTime.minute -ge 50) {
-        $global:whileTime = (60 - $CurrentDateTime.minute) * 60 + 10 * 60 - $CurrentDateTime.second
-    }
-    else {
-        $global:whileTime = 3
-    }
-
-}
-
-function intervalAccurate {
-    $CurrentDateTime = GetDateTime
-
-    $a = $global:fristTime - 2
-    $b = $global:fristTime + 2
-    $c = $global:lastTime - 2
-    $d = $global:lastTime + 2
-
-    if ($CurrentDateTime.minute -lt $a ) {
-        $global:whileTime = ($a - $CurrentDateTime.minute) * 60 - $CurrentDateTime.second
-    }
-    elseif ($CurrentDateTime.minute -ge $b -and $CurrentDateTime.minute -lt $c) {
-        $global:whileTime = ($c - $CurrentDateTime.minute) * 60 - $CurrentDateTime.second
-    }
-    elseif ($CurrentDateTime.minute -ge $d) {
-        $global:whileTime = (60 - $CurrentDateTime.minute) * 60 + $a * 60 - $CurrentDateTime.second
-    }
-    else {
-        $global:whileTime = 3
-    }
-
 }
 
 log "Start"
@@ -257,3 +240,75 @@ while ($global:whileFlag) {
 
     Start-Sleep -Seconds $global:whileTime
 }
+
+# 示例：提取大图标和小图标
+$LargeIcons = New-Object IntPtr[] 1
+$SmallIcons = New-Object IntPtr[] 1
+[IconAPI]::ExtractIconEx("C:\Windows\System32\shell32.dll", 130, $LargeIcons, $SmallIcons, 1)
+$newIcon = [System.Drawing.Icon]::FromHandle($LargeIcons[0])
+
+# 托盘图标初始化
+$trayIcon = New-Object System.Windows.Forms.NotifyIcon
+$trayIcon.Icon = $newIcon
+$trayIcon.Text = "AC-PS"
+$trayIcon.Visible = $true
+
+# 上下文菜单
+$contextMenu = New-Object System.Windows.Forms.ContextMenuStrip
+
+# 退出菜单项
+$exitItem = $contextMenu.Items.Add("退出")
+$exitItem.Add_Click({
+    $trayIcon.Visible = $false
+    $timer.Stop()
+    log "菜单退出"
+    [System.Windows.Forms.Application]::Exit()
+})
+
+# 其他菜单项
+$syncItem = $contextMenu.Items.Add("其他菜单选项")
+$syncItem.Add_Click({
+    # 其他菜单项逻辑
+})
+
+$trayIcon.ContextMenuStrip = $contextMenu
+
+# 定时器模块
+$timer = New-Object System.Windows.Forms.Timer
+$timer.Interval = 3000
+
+
+$timer.Add_Tick({
+
+    if($global:startFlag) {
+        log "定时器启动"
+        $global:startFlag = $false
+    }
+    if($global:whileFlag) {
+        $CurrentDateTime = GetDateTime
+
+        queryApp
+
+        if ($CurrentDateTime.hour -ge 20) {
+            $global:whileFlag = 0
+            $global:whileTime = 1
+            log "End"
+        }
+
+        info ("interval " + $global:whileTime + " second")
+
+        Start-Sleep -Seconds $global:whileTime
+    } else {
+        $timer.Stop()
+        [System.Windows.Forms.Application]::Exit()
+    }
+})
+
+# 启动服务
+$timer.Start()
+[System.Windows.Forms.Application]::Run()
+
+# 退出清理
+$timer.Dispose()
+$trayIcon.Dispose()
+$mutex.ReleaseMutex()
