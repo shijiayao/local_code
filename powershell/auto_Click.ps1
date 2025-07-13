@@ -312,3 +312,13 @@ $timer.Start()
 $timer.Dispose()
 $trayIcon.Dispose()
 $mutex.ReleaseMutex()
+
+
+<#
+# 点击特定坐标.ps1
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.Cursor]::Position = New-Object System.Drawing.Point(100, 100)
+[System.Windows.Forms.SendMouseEvents]::MouseEvent("LeftDown")
+Start-Sleep -Milliseconds 100
+[System.Windows.Forms.SendMouseEvents]::MouseEvent("LeftUp")
+#>

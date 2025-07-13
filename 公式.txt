@@ -1,0 +1,27 @@
+// 判断单元格值是不是与给定列中的数据匹配
+=IF(
+    OR(Q3 = "", LEN(Q3) < 4),
+    "Null",
+    IF(
+        SUMPRODUCT( --ISNUMBER(SEARCH(LEFT(LOWER(Q3), 4), LOWER(SP!A:A)))) > 0,
+        "七类",
+        IF(
+            SUMPRODUCT( --ISNUMBER(SEARCH(LEFT(LOWER(Q3), 4), LOWER(SP!B:B)))) > 0,
+            "超员",
+            "一般"
+        )
+    )
+)
+
+// 判断单元格值是不是在给定列的时间段内
+=IF(ISTEXT(C2), TIMEVALUE(C2), C2)
+=IF(ISTEXT(D2), TIMEVALUE(D2), D2)
+=IF(AA3<>"七类", 0, 
+    IF(SUMPRODUCT(
+          (SP!$C$2:$C$1000<>"") * 
+          ( 
+             ( (SP!$E$2:$E$1000 <= SP!$F$2:$F$1000) * (MOD(N3,1) >= SP!$E$2:$E$1000) * (MOD(N3,1) <= SP!$F$2:$F$1000) ) +
+             ( (SP!$E$2:$E$1000 > SP!$F$2:$F$1000) * ( (MOD(N3,1) >= SP!$E$2:$E$1000) + (MOD(N3,1) <= SP!$F$2:$F$1000) ) )
+          )
+    ) > 0, 1, 0)
+)
