@@ -35,7 +35,7 @@ function log {
     param($content)
     $currentDateTime = Get-Date
 
-    $LogPath = "D:/Run_log/" + $currentDateTime.ToString("yyyy") + "/"
+    $LogPath = "C:/Run_log/" + $currentDateTime.ToString("yyyy") + "/"
     New-Item -ItemType Directory -Path $LogPath -Force
 
     $filePath = $LogPath + $currentDateTime.ToString("yyyy-MM-dd") + ".powershell.log"
@@ -51,19 +51,19 @@ function MainScript {
 		.\Scripts\activate
 		python JXBF_MAIN.py
 	}
-	
+
 	Start-Process -NoNewWindow powershell -ArgumentList "-Command", $commands.ToString()
 }
 
 # 示例：提取大图标和小图标
 $LargeIcons = New-Object IntPtr[] 1
 $SmallIcons = New-Object IntPtr[] 1
-[IconAPI]::ExtractIconEx("C:\Windows\System32\shell32.dll", 130, $LargeIcons, $SmallIcons, 1)
+[IconAPI]::ExtractIconEx("C:\Windows\System32\shell32.dll", 41, $LargeIcons, $SmallIcons, 1)
 
 # 托盘图标初始化
 $trayIcon = New-Object System.Windows.Forms.NotifyIcon
 $trayIcon.Icon = [System.Drawing.Icon]::FromHandle($LargeIcons[0])
-$trayIcon.Text = "Monit"
+$trayIcon.Text = "小树苗"
 $trayIcon.Visible = $true
 
 # 上下文菜单
@@ -81,7 +81,7 @@ $trayIcon.ContextMenuStrip = $contextMenu
 
 # 定时器模块
 $timer = New-Object System.Windows.Forms.Timer
-$timer.Interval = 1000
+$timer.Interval = 100
 
 $timer.Add_Tick({
     $Global:CurrentTime = Get-Date
@@ -91,7 +91,7 @@ $timer.Add_Tick({
     if($Global:Count % 30 -eq 0) {
         MainScript
     }
-    
+
     # 运行 24 小时后，退出
     if ($Global:TimeDifference.Hours -ge 24) {
         $timer.Stop()
