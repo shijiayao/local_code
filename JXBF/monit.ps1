@@ -51,7 +51,7 @@ function MainScript {
 		.\Scripts\activate
 		python JXBF_MAIN.py
 	}
-
+	
 	Start-Process -NoNewWindow powershell -ArgumentList "-Command", $commands.ToString()
 }
 
@@ -87,11 +87,11 @@ $timer.Add_Tick({
     $Global:CurrentTime = Get-Date
     $Global:TimeDifference = $Global:CurrentTime - $Global:StartTime
 
-    # 每 30 秒执行一次
-    if($Global:Count % 30 -eq 0) {
+    # 每 60 秒执行一次
+    if($Global:Count % 60 -eq 0) {
         MainScript
     }
-
+    
     # 运行 24 小时后，退出
     if ($Global:TimeDifference.Hours -ge 24) {
         $timer.Stop()
