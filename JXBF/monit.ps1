@@ -87,8 +87,8 @@ $timer.Add_Tick({
     $Global:CurrentTime = Get-Date
     $Global:TimeDifference = $Global:CurrentTime - $Global:StartTime
 
-    # 每 60 秒执行一次
-    if($Global:Count % 60 -eq 0) {
+    # 每 30 秒执行一次
+    if($Global:Count % 30 -eq 0) {
         MainScript
     }
     

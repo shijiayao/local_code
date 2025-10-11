@@ -35,8 +35,6 @@ def auto_click_image():
 					log(f'图片点击完成。')
 					time.sleep(2)
 					pyautogui.moveTo(100, 700)
-
-			time.sleep(2)
 			
 		if not query_image_path:
 			break
